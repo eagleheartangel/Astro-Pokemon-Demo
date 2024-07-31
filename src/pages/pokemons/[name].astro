@@ -1,0 +1,51 @@
+---
+import type { GetStaticPaths } from "astro";
+import type { PokemonListResponse } from "../../interfaces/pokemon-interface";
+
+import MainLayout from "../../layouts/MainLayout.astro";
+import PokemonCard from "../../components/pokemons/pokemonCard.astro";
+
+export const getStaticPaths = (async () => {
+  const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=200");
+  const { results } = (await res.json()) as PokemonListResponse;
+
+  //   para crear las rutas de cada pokemon se debe iterar los datos y crear el array con los path estaticos
+  return results.map(({ name, url }) => ({
+    params: {
+      name: name,
+    },
+    props: {
+      url: url,
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+const { name } = Astro.params;
+const { url } = Astro.props;
+
+const id = url.split("/").at(-2);
+const audioSrc = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pokemon/latest/${id}.ogg`;
+---
+
+<MainLayout title="Algun pokemon">
+  <section class="w-full h-screen flex flex-col justify-center items-center">
+    <div
+      class="w-full flex flex-col justify-center items-center bg-gray-900 rounded-xl p-4"
+    >
+      <div class="w-full flex justify-start mb-4">
+        <a
+          class="hover:bg-black text-black hover:text-white transition-all duration-500 bg-white px-2 rounded-lg text-3xl"
+          href="/">&#8592;</a
+        >
+      </div>
+
+      <PokemonCard name={name} url={url} isBig />
+
+      <audio controls class="w-full mt-4">
+        Your browser does not support the
+        <code>audio</code> element.
+        <source src={audioSrc} />
+      </audio>
+    </div>
+  </section>
+</MainLayout>
