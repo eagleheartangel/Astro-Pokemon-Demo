@@ -1,9 +1,9 @@
 ---
 // Código Server Side Only - Momento de construccion BUILD TIME
-import type { PokemonListResponse } from "../interfaces/pokemon-interface";
+import type { PokemonListResponse } from "@interfaces/pokemon-interface";
 
-import MainLayout from "../layouts/MainLayout.astro";
-import PokemonCard from "../components/pokemons/pokemonCard.astro";
+import MainLayout from "@layouts/MainLayout.astro";
+import PokemonCard from "@components/pokemons/pokemonCard.astro";
 
 const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=12");
 const data = (await res.json()) as PokemonListResponse;
